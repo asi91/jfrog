@@ -1,4 +1,4 @@
-from artifactory import Artifactory
+from .artifactory import Artifactory
 import sys
 from credentials import UserCredentials
 from requests.exceptions import HTTPError

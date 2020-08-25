@@ -2,7 +2,7 @@ import requests
 import json
 from time import time
 
-from decorators import retry_on_network_errors, refresh_access_token
+from .decorators import retry_on_network_errors, refresh_access_token
 
 
 class Artifactory(object):
