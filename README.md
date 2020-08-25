@@ -1,4 +1,4 @@
-#asifrog
+# asifrog
 
 This is a basic custom JFrog CLI that accepts the following actions:
 
