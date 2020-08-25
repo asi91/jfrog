@@ -19,6 +19,7 @@ class Artifactory(object):
         self.base_url = "https://asihamza.jfrog.io/artifactory"
         self.users_endpoint = "/api/security/users/"
         self.system_endpoint = "/api/system"
+        self.storage_endpoint = "/api/storageinfo"
 
         self._retrieve_access_token_data()
 
@@ -52,10 +53,15 @@ class Artifactory(object):
         return requests.get(f"{self.base_url}{self.system_endpoint}", headers=self.headers).text
 
     @refresh_access_token
-    @retry_on_network_errors
+    @retry_on_network_errors()
     def system_version(self):
         # artifactory version
         return requests.get(f"{self.base_url}{self.system_endpoint}/version", headers=self.headers).text
+
+    @refresh_access_token
+    @retry_on_network_errors()
+    def storage_info(self):
+        return requests.get(f"{self.base_url}{self.storage_endpoint}", headers=self.headers).text
 
     @refresh_access_token
     @retry_on_network_errors()
