@@ -21,10 +21,12 @@ class Artifactory(object):
         self.system_endpoint = "/api/system"
         self.storage_endpoint = "/api/storageinfo"
 
-        self._retrieve_access_token_data()
+        self.access_token, self.token_expire_time, self.token_type, self.headers = [None] * 4
+
+        self.retrieve_access_token_data()
 
     @retry_on_network_errors()
-    def _retrieve_access_token_data(self):
+    def retrieve_access_token_data(self):
         resp = requests.post(
             f"{self.base_url}/api/security/token",
             auth=(self.user, self.passwd),
@@ -45,23 +47,35 @@ class Artifactory(object):
     @refresh_access_token
     @retry_on_network_errors()
     def ping(self):
-        return requests.get(f"{self.base_url}{self.system_endpoint}/ping", headers=self.headers).text
+        return requests.get(
+            f"{self.base_url}{self.system_endpoint}/ping",
+            headers=self.headers
+        ).text
 
     @refresh_access_token
     @retry_on_network_errors
     def system_info(self):
-        return requests.get(f"{self.base_url}{self.system_endpoint}", headers=self.headers).text
+        return requests.get(
+            f"{self.base_url}{self.system_endpoint}",
+            headers=self.headers
+        ).text
 
     @refresh_access_token
     @retry_on_network_errors()
     def system_version(self):
         # artifactory version
-        return requests.get(f"{self.base_url}{self.system_endpoint}/version", headers=self.headers).text
+        return requests.get(
+            f"{self.base_url}{self.system_endpoint}/version",
+            headers=self.headers
+        ).text
 
     @refresh_access_token
     @retry_on_network_errors()
     def storage_info(self):
-        return requests.get(f"{self.base_url}{self.storage_endpoint}", headers=self.headers).text
+        return requests.get(
+            f"{self.base_url}{self.storage_endpoint}",
+            headers=self.headers
+        ).text
 
     @refresh_access_token
     @retry_on_network_errors()
@@ -75,7 +89,11 @@ class Artifactory(object):
         for k, v in kwargs.items():
             user_data[k] = v
 
-        resp = requests.put(f"{self.base_url}{self.users_endpoint}{name}", json=user_data, headers=self.headers)
+        resp = requests.put(
+            f"{self.base_url}{self.users_endpoint}{name}",
+            json=user_data,
+            headers=self.headers
+        )
 
         if resp.ok:
             return resp.text or f"User `{name}` has been created successfully"
@@ -85,4 +103,7 @@ class Artifactory(object):
     @refresh_access_token
     @retry_on_network_errors()
     def delete_user(self, name):
-        return requests.delete(f"{self.base_url}{self.users_endpoint}{name}", headers=self.headers).text
+        return requests.delete(
+            f"{self.base_url}{self.users_endpoint}{name}",
+            headers=self.headers
+        ).text
