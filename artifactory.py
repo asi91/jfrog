@@ -53,7 +53,7 @@ class Artifactory(object):
         ).text
 
     @refresh_access_token
-    @retry_on_network_errors
+    @retry_on_network_errors()
     def system_info(self):
         return requests.get(
             f"{self.base_url}{self.system_endpoint}",
